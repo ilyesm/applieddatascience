@@ -32,3 +32,5 @@ final = final.sort_values(by=['Date'], ascending=True)
 # Export clean data to CSV and Excel
 final.to_csv('pricing.csv')
 final.to_excel('pricing.xlsx')
+
+# Write code to find sector, market cap of each ticker and save to csv
