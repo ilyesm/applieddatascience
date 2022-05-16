@@ -3,7 +3,7 @@ import pandas as pd
 import yfinance as yf
 
 # Read the data and filter for the required column
-data = pd.read_csv('Holdings.csv')
+data = pd.read_csv('data/Holdings.csv')
 datalist = data['Ticker'].tolist()
 
 # Create a DataFrame with each ticker and the corresponding closing price for the past 10 years
@@ -17,20 +17,18 @@ pricing = yf.download(
         threads = True,
     )
 
-# # Clean up the data (remove the index and rename and drop unnecessary columns)
-# transposed = pricing.transpose()
-# transposed = transposed.reset_index()
-# transposed = transposed.rename(columns={'level_0':'Ticker'})
-# transposed = transposed[transposed['level_1']=='Close']
-# transposed = transposed.drop(columns=['level_1'])
-# transposed = transposed.set_index('Ticker')
+# Clean up the data (remove the index and rename and drop unnecessary columns)
+transposed = pricing.transpose()
+transposed = transposed.reset_index()
+transposed = transposed.rename(columns={'level_0':'Ticker'})
+transposed = transposed[transposed['level_1']=='Close']
+transposed = transposed.drop(columns=['level_1'])
+transposed = transposed.set_index('Ticker')
 
-# # Restore the data into a readable file
-# final = transposed.transpose()
-# final = final.sort_values(by=['Date'], ascending=True)
+# Restore the data into a readable file
+final = transposed.transpose()
+final = final.sort_values(by=['Date'], ascending=True)
 
 # Export clean data to CSV and Excel
-pricing.to_csv('pricing.csv')
-pricing.to_excel('pricing.xlsx')
-
-# Write code to find sector, market cap of each ticker and save to csv
+pricing.to_csv('data/pricing.csv')
+pricing.to_excel('data/pricing.xlsx')
