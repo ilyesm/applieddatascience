@@ -30,5 +30,5 @@ final = transposed.transpose()
 final = final.sort_values(by=['Date'], ascending=True)
 
 # Export clean data to CSV and Excel
-pricing.to_csv('data/pricing.csv')
-pricing.to_excel('data/pricing.xlsx')
+final.to_csv('data/pricing.csv')
+final.to_excel('data/pricing.xlsx')
