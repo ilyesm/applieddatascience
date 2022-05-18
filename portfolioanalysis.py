@@ -1,4 +1,5 @@
 # Import libraries
+from email.quoprimime import header_check
 from pandas_datareader.data import DataReader
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 from pypfopt import EfficientFrontier
@@ -16,6 +17,17 @@ import seaborn as sns
 tickers = pd.read_csv('data/Holdings.csv')['Ticker'].tolist()
 stocks_df = pd.read_csv('data/pricing.csv').set_index('Date')
 daily_returns = pd.read_csv('data/daily_return.csv').set_index('Date')
+
+# Define variables
+num_portfolios = 10000
+risk_free_rate = 0.018
+number = 0
+
+# Define DataFrame to store results
+df = pd.DataFrame(columns=['Portfolio','Annualized Return', 'Annualized Volatility', 'Sharpe Ratio'])
+
+# Read CSV with previously generated portfolios
+portfolios = pd.read_csv('data/portfolios.csv')
 
 # Define portfolio return function
 def portfolio_annualized_performance(weights, mean_returns, cov_matrix):
@@ -52,6 +64,7 @@ def generate_random_portfolios(num_portfolios, mean_returns, cov_matrix, risk_fr
 
 # Define function to collect and output results
 def display_simulated_portfolios(number, mean_returns, cov_matrix, num_portfolios, risk_free_rate):
+    global df
     # pull results, weights from random portfolios
     results, weights = generate_random_portfolios(num_portfolios, mean_returns, cov_matrix, risk_free_rate)
     
@@ -63,50 +76,15 @@ def display_simulated_portfolios(number, mean_returns, cov_matrix, num_portfolio
     stdev_portfolio, returns_portfolio = results[0,max_sharpe_idx], results[1,max_sharpe_idx]
 
     # pull the allocation associated with max Sharpe ratio
-    max_sharpe_allocation = pd.DataFrame(weights[max_sharpe_idx],index=portfolio, columns=['allocation'])
-    max_sharpe_allocation.allocation = [round(i*100,2)for i in max_sharpe_allocation.allocation]
-    # max_sharpe_allocation = max_sharpe_allocation.T
-    
-    # Visual display of the results on console
-    # print("Portfolio number" + str(number))
-    # print("--Returns, volatility--\n")
-    # print("Annualized Return:", round(returns_portfolio,2))
-    # print("Annualized Volatility:", round(stdev_portfolio,2))
-    
-    # print("\n")
-    # print("--Allocation at max Sharpe ratio--\n")
-    # print(max_sharpe_allocation)
-    
-    # Create plot of sharpe ratio
-    plt.figure(figsize=(16, 9))
-    plt.scatter(results[0,:],results[1,:],c=results[2,:], cmap='winter', marker='o', s=10, alpha=0.3)
-    plt.colorbar()
-    plt.scatter(stdev_portfolio, returns_portfolio, marker='x',color='r',s=150, label='Max Sharpe ratio')
-    plt.title('Simulated portfolios illustrating efficient frontier')
-    plt.xlabel('annualized volatility')
-    plt.ylabel('annualized returns')
-    plt.legend(labelspacing=1.2)
+    max_sharpe_allocation = pd.DataFrame(weights[max_sharpe_idx],index=portfolio, columns=['weight'])
+    max_sharpe_allocation.weight = [round(i*100,2)for i in max_sharpe_allocation.weight]
 
-    # Save portfolio allocation and figure to /data/portfolioallocation
-    max_sharpe_allocation.to_csv('data/generatedportfolios/weights/'+str(number)+'.csv')
-    plt.savefig('data/generatedportfolios/figures/'+str(number)+'.png')
-    plt.close('all')
+    max_sharpe_allocation.to_csv('data/generatedportfolios/weights/test.csv',mode='a',header=False)
 
     # Save returns and volatility to dataframe
-    d = {'Portfolio': number, 'Annualized Return': returns_portfolio, 'Annualized Volatility': stdev_portfolio, 'Sharpe Ratio': results[2,max_sharpe_idx]}
-    df = pd.DataFrame(data=d,index=[0])
-    df.to_csv('data/portfolioresults.csv', mode='a', header=False)
+    temp = pd.DataFrame({'Portfolio': number, 'Annualized Return': returns_portfolio, 'Annualized Volatility': stdev_portfolio, 'Sharpe Ratio': results[2,max_sharpe_idx]},index=[0])
+    df = pd.concat([temp, df])
 
-# Define variables
-num_portfolios = 10000
-risk_free_rate = 0.018
-number = 0
-
-# Define DataFrame to store results
-df = pd.DataFrame(columns=['Portfolio','Annualized Return', 'Annualized Volatility'])
-
-# Read CSV with previously generated portfolios
-portfolios = pd.read_csv('data/portfolios.csv')
 
 for row in portfolios.index:
     # Load each portfolio
@@ -123,3 +101,5 @@ for row in portfolios.index:
 
     # Increment number
     number = number + 1
+
+df.to_csv('data/portfolioresults.csv', mode='a', header=['Portfolio','Annualized Return', 'Annualized Volatility','Sharpe Ratio'])
