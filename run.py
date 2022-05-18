@@ -14,6 +14,9 @@ highest_return_port_num = results.sort_values('Annualized Return',ascending=Fals
 highest_return = results.loc[highest_return_port_num]
 highest_return_weights = weights.loc[highest_return_port_num*15:(highest_return_port_num*15)+14].set_index('ticker')
 
+# Get prices of highest return portfolio
+highest_return_prices = prices[highest_return_weights.index.tolist()]
+
 # Find portfolio with the lowest standard deviation
 lowest_stdev_port_num = results.sort_values('Annualized Volatility',ascending=True).iloc[0].name
 
@@ -21,12 +24,18 @@ lowest_stdev_port_num = results.sort_values('Annualized Volatility',ascending=Tr
 lowest_stdev = results.loc[lowest_stdev_port_num]
 lowest_stdev_weights = weights.loc[lowest_stdev_port_num*15:(lowest_stdev_port_num*15)+14].set_index('ticker')
 
+# Get prices of lowest standard deviation portfolio
+lowest_stdev_prices = prices[lowest_stdev_weights.index.tolist()]
+
 # Find portfolio with the highest sharpe ratio
 highest_sharperatio_port_num = results.sort_values('Sharpe Ratio',ascending=False).iloc[0].name
 
 # Get weights of highest sharpe ratio portfolio
 highest_sharpe = results.loc[highest_sharperatio_port_num]
 highest_sharpe_weights = weights.loc[highest_sharperatio_port_num*15:(highest_sharperatio_port_num*15)+14].set_index('ticker')
+
+# Get prices of highest sharpe ratio portfolio
+highest_sharpe_prices = prices[highest_sharpe_weights.index.tolist()]
 
 print('Welcome to our Applied Data Science Project!')
 print('This is a project for the Applied Data Science class at the Católica-Lisbon School of Business and Economics.')
