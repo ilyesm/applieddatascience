@@ -88,7 +88,7 @@ def display_simulated_portfolios(number, mean_returns, cov_matrix, num_portfolio
     plt.legend(labelspacing=1.2)
 
     # Save portfolio allocation and figure to /data/portfolioallocation
-    max_sharpe_allocation.to_csv('data/generatedportfolios/weights/'str(number)+'.csv')
+    max_sharpe_allocation.to_csv('data/generatedportfolios/weights/'+str(number)+'.csv')
     plt.savefig('data/generatedportfolios/figures/'+str(number)+'.png')
     plt.close('all')
 
