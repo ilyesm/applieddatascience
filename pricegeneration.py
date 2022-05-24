@@ -9,12 +9,10 @@ Created on Tue May 24 14:46:19 2022
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 #The portfolio with the highest annualized return
 
 returns1 = ((1+0.5323)**(1/12))-1
 vol1 = 0.2703/(12**(0.5))
-
 
 T1 = 120
 count1 = 0

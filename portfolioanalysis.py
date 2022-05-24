@@ -72,8 +72,6 @@ def simulated_portfolio(number, avg_returns, cov_matrix, num_portfolios, risk_fr
     max_sharpe_allocation = pd.DataFrame(weights[max_sharpe_idx],index=portfolio, columns=['weight'])
     max_sharpe_allocation.weight = [round(i*100,2)for i in max_sharpe_allocation.weight]
 
-    max_sharpe_allocation.to_csv('data/generatedportfolios/weights/test.csv',mode='a',header=False)
-
     # Save returns and volatility to dataframe
     temp = pd.DataFrame({'Portfolio': number, 'Annualized Return': returns_portfolio, 'Annualized Volatility': stdev_portfolio, 'Sharpe Ratio': results[2,max_sharpe_idx]},index=[0])
     df = pd.concat([temp, df])
