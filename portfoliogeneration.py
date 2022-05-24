@@ -3,8 +3,7 @@ import pandas as pd
 import numpy as np
 import random
 
-# Define method to generate list of random portfolios
-
+# Define function to generate list of random portfolios
 def generate_portfolios(stocks, num_portfolios, num_stocks):
     portfolios = []
     for i in range(num_portfolios):
@@ -17,7 +16,7 @@ def generate_portfolios(stocks, num_portfolios, num_stocks):
 # Read data of available tickers
 tickers = pd.read_csv('/Users/ilyas/github/applieddatascience/data/Holdings.csv')['Ticker']
 
-# Call method
+# Call function
 portfolios = pd.DataFrame(generate_portfolios(tickers, 10000, 15))
 
 # Export data to CSV and Excel
